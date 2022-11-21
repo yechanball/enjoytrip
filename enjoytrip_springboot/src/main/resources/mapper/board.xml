@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.enjoytrip.board.dao.BoardDao">
+	<resultMap type="boardDto" id="article">	
+		<result column="article_no" property="articleNo"/>
+		<result column="subject" property="subject"/>
+		<result column="user_id" property="userId"/>
+		<result column="hit" property="hit"/>
+		<result column="register_time" property="registerTime"/>
+	</resultMap>
+	
+	<resultMap type="boardDto" id="articleDetail" extends="article">
+		<result column="user_name" property="userName"/>
+		<result column="content" property="content"/>
+	</resultMap>
+	
+	<!-- 게시판 글 목록 불러오기 -->
+	<select id="listArticle" parameterType="map" resultMap="article">
+		select article_no, user_id, subject, content, hit, register_time
+		from board
+		<if test='!key.equals("none")'>
+			where ${key} like concat('%', #{word}, '%')
+		</if>
+		<if test='orderBy.equals("none")'>
+			order by article_no desc
+		</if>
+		<if test='!orderBy.equals("none")'>
+			order by ${orderBy} ${orderByDir}
+		</if>
+		limit #{start}, #{spl}
+	</select>
+	
+	<!-- 총 글 개수 불러오기 -->
+	<select id="totalArticleCount" parameterType="map" resultType="int">
+		select count(article_no)
+		from board
+		<if test='!key.equals("none")'>
+			where ${key} like concat('%', #{word}, '%')
+		</if>
+	</select>
+
+	<!-- 글 작성하기 -->
+	<insert id="writeArticle" parameterType="boardDto">
+		insert into board (user_id, subject, content, hit, register_time)
+		values (#{userId}, #{subject}, #{content}, 0, now())
+	</insert>
+	
+	<!-- 글 상세 내용 불러오기 -->
+	<select id="getArticle" parameterType="int" resultMap="articleDetail">
+		select article_no, user_id, subject, content, hit, register_time
+		from board
+		where article_no = #{articleNo}
+	</select>
+	
+	<!-- 조회수 갱신하기 -->
+	<update id="updateHit" parameterType="int">
+		update board
+		set hit = hit + 1
+		where article_no = #{articleNo}
+	</update>
+	
+	<!-- 글 수정하기 -->
+	<update id="modifyArticle" parameterType="boardDto">
+		update board
+		set subject = #{subject}, content = #{content}
+		where article_no = #{articleNo}
+	</update>
+	
+	<!-- 댓글 전부 삭제하기 -->
+	<delete id="deleteAllMemo" parameterType="int">
+		delete from memo
+		where article_no = #{articleNo}
+	</delete>
+	
+	<!-- 글 삭제하기 -->
+	<delete id="deleteArticle" parameterType="int">
+		delete from board
+		where article_no = #{articleNo}
+	</delete>
+	
+</mapper>

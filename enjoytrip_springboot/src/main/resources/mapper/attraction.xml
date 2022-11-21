@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.enjoytrip.attraction.dao.AttractionDao">
+	<resultMap type="doDto" id="do">
+		<result column="do_idx" property="doIdx"/>
+		<result column="do_name" property="doName"/>
+	</resultMap>
+	
+	<resultMap type="sigunguDto" id="sigungu">
+		<result column="sigungu_idx" property="sigunguIdx"/>
+		<result column="sigungu_name" property="sigunguName"/>
+		<result column="sigungu_do_idx" property="sigunguName"/>
+	</resultMap>
+	
+	<resultMap type="attractionDto" id="attraction">
+		<result column="contentid" property="contentId"/>
+		<result column="firstimage" property="firstImage"/>
+		<result column="areacode" property="areaCode"/>
+		<result column="sigungucode" property="sigunguCode"/>
+		<result column="contenttypeid" property="contentTypeId"/>
+		<result column="mapx" property="mapX"/>
+		<result column="mapy" property="mapY"/>
+		<result column="title" property="title"/>
+	</resultMap>
+	
+	<resultMap type="attractionDto" id="attractionDetail" extends="attraction">
+		<result column="addr1" property="addr1"/>
+		<result column="addr2" property="addr2"/>
+		<result column="booktour" property="bookTour"/>
+		<result column="cat1" property="cat1"/>
+		<result column="cat2" property="cat2"/>
+		<result column="cat3" property="cat3"/>
+		<result column="createdtime" property="createdTime"/>
+		<result column="firstimage2" property="firstImage2"/>
+		<result column="mlevel" property="mLevel"/>
+		<result column="modifiedtime" property="modifiedTime"/>
+		<result column="readcount" property="readCount"/>
+		<result column="tel" property="tel"/>
+		<result column="zipcode" property="zipCode"/>
+		<result column="overview" property="overview"/>		
+	</resultMap>
+	
+	<!-- 도 목록 호출 -->
+	<select id="getDoList" resultMap="do">
+		select do_idx, do_name
+		from do
+	</select>
+	
+	<!-- 시군구 목록 호출 -->
+	<select id="getSigunguList" parameterType="int" resultMap="sigungu">
+		select sigungu_idx, sigungu_name
+		from sigungu
+		where sigungu_do_idx = #{sigunguDoIdx}
+	</select>
+	
+	<!-- 관광지 목록 호출 -->
+	<select id="getAttractionList" parameterType="map" resultMap="attraction">
+		select areacode, contentid, contenttypeid, firstimage, mapx, mapy, sigungucode, title
+		from attraction
+		where areacode = #{doIdx} and sigungucode = #{sigunguIdx}
+		<if test="contentTypeId != 0">
+			and contenttypeid = #{contentTypeId}
+		</if>
+	</select>
+	
+	<!-- 관광지 상세보기 호출 -->
+	<select id="getAttraction" parameterType="int" resultMap="attractionDetail">
+		select a.addr1, a.addr2, a.areacode, a.booktour, a.cat1, a.cat2, a.cat3, a.contentid, a.contenttypeid, a.firstimage, a.firstimage2, a.mapx, a.mapy, a.mlevel, a.modifiedtime, a.readcount, a.sigungucode, a.tel, a.title, a.zipcode, d.overview
+		from attraction a left join attractiondesc d
+		on a.contentid = d.contentid
+		where a.contentid = #{contentId}
+	</select>
+	
+</mapper>

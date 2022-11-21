@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.enjoytrip.memo.dao.MemoDao">
+	<resultMap type="memoDto" id="memo">	
+		<result column="memo_no" property="memoNo"/>
+		<result column="user_id" property="userId"/>
+		<result column="comment" property="comment"/>
+		<result column="article_no" property="articleNo"/>
+		<result column="memo_time" property="memoTime"/>
+	</resultMap>
+	
+	<!-- 댓글 목록 불러오기 -->
+	<select id="listMemo" parameterType="int" resultMap="memo">
+		select memo_no, user_id, comment, article_no, memo_time
+		from memo
+		where article_no = #{articleNo}
+	</select>
+	
+	<!-- 댓글 작성하기 -->
+	<insert id="writeMemo" parameterType="memoDto">
+		insert into memo (user_id, comment, article_no, memo_time)
+		values (#{userId}, #{comment}, #{articleNo}, now())
+	</insert>
+	
+	<!-- 댓글 삭제하기 -->
+	<delete id="deleteMemo" parameterType="memoDto">
+		delete from memo
+		where memo_no = #{memoNo} and user_id = #{userId}
+	</delete>
+	
+</mapper>

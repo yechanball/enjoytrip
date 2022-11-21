@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.enjoytrip.member.dao.MemberDao">
+	<resultMap type="memberDto" id="member">
+		<result column="user_id" property="userId"/>
+		<result column="user_name" property="userName"/>
+		<result column="user_password" property="userPwd"/>
+	</resultMap>
+	
+	<resultMap type="memberDto" id="memberDetail" extends="member">
+		<result column="email_id" property="emailId"/>
+		<result column="email_domain" property="emailDomain"/>
+		<result column="join_date" property="joinDate"/>		
+	</resultMap>
+	
+	<!-- 로그인 -->
+	<select id="login" parameterType="memberDto" resultMap="memberDetail">
+		select user_id, user_name, user_password, email_id, email_domain, join_date
+		from members
+		where user_id = #{userId} and user_password = #{userPwd} and user_isdel = 0
+	</select>
+	
+	<!-- 로그인 회원 정보 호출 -->
+	<select id="userInfo" parameterType="string" resultMap="memberDetail">
+		select user_id, user_name, user_password, email_id, email_domain, join_date
+		from members
+		where user_id = #{userId} and user_isdel = 0
+	</select>
+	
+	<!-- 리프레쉬 토큰 호출 -->
+	<select id="getRefreshToken" parameterType="string" resultType="string">
+		select token
+		from members
+		where user_id = #{userId}
+	</select>
+	
+	<!-- 리프레쉬 토큰 저장 -->
+	<update id="saveRefreshToken" parameterType="map">
+		update members
+		set token = #{token}
+		where user_id = #{userId}
+	</update>
+	
+	<!-- 리프레쉬 토큰 삭제 -->
+	<update id="deleteRefreshToken" parameterType="map">
+		update members
+		set token = #{token, jdbcType=VARCHAR}
+		where user_id = #{userId}
+	</update>
+	
+	<!-- 아이디가 존재하는지 확인 -->
+	<select id="idCheck" parameterType="string" resultType="int">
+		select count(user_id)
+		from members
+		where user_id = #{userId}
+	</select>
+	
+	<!-- 회원 가입 -->
+	<insert id="joinMember" parameterType="memberDto">
+		insert into members (user_id, user_name, user_password, email_id, email_domain, join_date)
+		values (#{userId}, #{userName}, #{userPwd}, #{emailId}, #{emailDomain}, now())
+	</insert>
+	
+	<!-- 회원 정보 수정 -->
+	<update id="modifyMember" parameterType="memberDto">
+		update members
+		set user_password = #{userPwd}, email_id = #{emailId}, email_domain = #{emailDomain}
+		where user_id = #{userId}
+	</update>
+	
+	<!-- 비밀번호 찾기 요청 -> 회원인 경우 비밀번호 초기화 -->
+	<select id="findPassMember" parameterType="memberDto" resultType="int">
+		select count(*)
+		from members
+		where user_id = #{userId} and user_name = #{userName} and user_isdel = 0 and email_id = #{emailId} and email_domain = #{emailDomain}
+	</select>
+
+	<!-- 회원 탈퇴 -->
+	<update id="deleteMember" parameterType="memberDto">
+		update members
+		set user_isdel = 1
+		where user_id = #{userId} and user_password = #{userPwd}
+	</update>
+	
+	<!-- 회원 목록 호출 -->
+
+</mapper>
