@@ -15,18 +15,14 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.enjoytrip.memo.model.MemoDto;
 import com.ssafy.enjoytrip.memo.service.MemoService;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
@@ -36,7 +32,9 @@ import io.swagger.annotations.ApiOperation;
 public class MemoController {
 
 	private static final Logger logger = LoggerFactory.getLogger(MemoController.class);
-
+	private static final String SUCCESS = "success";
+	private static final String FAIL = "fail";
+	
 	private MemoService memoService;
 
 	@Autowired
@@ -48,16 +46,24 @@ public class MemoController {
 	@GetMapping("/list/{articleno}")
 	public ResponseEntity<?> list(@PathVariable("articleno") int articleNo) {
 		logger.debug("memo list call article_no : {}", articleNo);
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.UNAUTHORIZED;
 		try {
 			List<MemoDto> list = memoService.listMemo(articleNo);
 			if(list != null && !list.isEmpty()) {
-				return new ResponseEntity<List<MemoDto>>(list, HttpStatus.OK);
+				resultMap.put("list", list);
+				resultMap.put("message", SUCCESS);
+				status = HttpStatus.ACCEPTED;
 			}else {
-				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+				resultMap.put("message", FAIL);
+				status = HttpStatus.NO_CONTENT;
 			}
 		} catch (Exception e) {
-			return exceptionHandling(e);
+			logger.error("댓글 목록 호출 실패 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 	
 	@ApiOperation(value = "게시판 댓글 작성", notes = "게시판의 댓글을 작성합니다.")
@@ -65,29 +71,36 @@ public class MemoController {
 	@Transactional
 	public ResponseEntity<?> write(@RequestBody MemoDto memoDto) {
 		logger.debug("memo write info : {}", memoDto);
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.UNAUTHORIZED;
 		try {
 			memoService.writeMemo(memoDto);
-			return new ResponseEntity<Void>(HttpStatus.OK);
+			resultMap.put("message", SUCCESS);
+			status = HttpStatus.ACCEPTED;
 		} catch (Exception e) {
-			return exceptionHandling(e);
+			logger.error("댓글 작성 실패 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 	
 	@ApiOperation(value = "게시판 댓글 삭제", notes = "게시판의 댓글을 삭제합니다.")
-	@DeleteMapping("/delete")
+	@PostMapping("/delete")
 	@Transactional
 	public ResponseEntity<?> delete(@RequestBody MemoDto memoDto) {
 		logger.debug("memo delete info : {}", memoDto);
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.UNAUTHORIZED;
 		try {
 			memoService.deleteMemo(memoDto);
-			return new ResponseEntity<Void>(HttpStatus.OK);
+			resultMap.put("message", SUCCESS);
+			status = HttpStatus.ACCEPTED;
 		} catch (Exception e) {
-			return exceptionHandling(e);
+			logger.error("댓글 삭제 실패 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
-	}
-	
-	private ResponseEntity<String> exceptionHandling(Exception e) {
-		e.printStackTrace();
-		return new ResponseEntity<String>("Error : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 }

@@ -1,5 +1,5 @@
 <template>
-  <b-container class="bv-example-row mt-5">
+  <b-container class="bv-example-row mt-3">
     <b-row class="mb-4">
       <b-col>
         <b-navbar toggleable="lg" type="dark" variant="dark">
@@ -9,7 +9,7 @@
         </b-navbar>
       </b-col>
     </b-row>
-    <b-row>
+    <b-row class="article-list">
       <b-col>
         <vue-good-table
           v-bind="articles"

@@ -48,12 +48,12 @@
           variant="dark"
           class="m-1"
           v-if="this.type === 'register'"
-          >Regist</b-button
+          >작성</b-button
         >
         <b-button type="submit" variant="dark" class="m-1" v-else
-          >Modify</b-button
+          >수정</b-button
         >
-        <b-button type="reset" variant="dark" class="m-1">Reset</b-button>
+        <b-button type="reset" variant="dark" class="m-1">취소</b-button>
       </b-form>
     </b-col>
   </b-row>

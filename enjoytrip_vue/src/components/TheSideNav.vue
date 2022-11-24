@@ -115,16 +115,16 @@ export default {
       memberActive: true,
       menuLinks: [
         { path: "/", title: "홈", icon: "house-fill" },
-        { path: "/attraction", title: "관광지지도", icon: "map-fill" },
-        { path: "/travel", title: "여행코스 목록", icon: "signpost-split" },
-        { path: "/board", title: "공유게시판", icon: "card-text" },
+        { path: "/attraction", title: "여행지도", icon: "map-fill" },
+        { path: "/travel", title: "여행코스", icon: "signpost-split" },
+        { path: "/board", title: "자유게시판", icon: "card-text" },
       ],
       menuLinksLogin: [
         { path: "/", title: "홈", icon: "house-fill" },
-        { path: "/attraction", title: "관광지지도", icon: "map-fill" },
-        { path: "/travel", title: "여행코스 목록", icon: "signpost-split" },
-        { path: "/plan", title: "여행코스 짜기", icon: "pin-map-fill" },
-        { path: "/board", title: "공유게시판", icon: "card-text" },
+        { path: "/attraction", title: "여행지도", icon: "map-fill" },
+        { path: "/travel", title: "여행코스", icon: "signpost-split" },
+        { path: "/plan", title: "여행코스 만들기", icon: "pin-map-fill" },
+        { path: "/board", title: "자유게시판", icon: "card-text" },
       ],
     };
   },
@@ -154,10 +154,8 @@ export default {
       this.menuCompact.hidden = !this.menuCompact.hidden;
 
       if (this.menuCompact.hidden) {
-        document.getElementById(".sidebar-links").style.minWidth = "0px";
         return (btnToggleIcon.style.transform = "rotateY(0deg)");
       } else {
-        document.getElementById(".sidebar-links").style.minWidth = "150px";
         return (btnToggleIcon.style.transform = "rotateY(180deg)");
       }
     },

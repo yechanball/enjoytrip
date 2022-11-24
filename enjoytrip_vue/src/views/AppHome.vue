@@ -35,7 +35,11 @@
         시인·임영준<br />
       </p>
       <div class="social-icons">
-        <a class="social-icon" href="#!">
+        <a
+          class="social-icon"
+          href="https://github.com/yechanball"
+          target="_blank"
+        >
           <b-iconstack font-scale="3">
             <b-icon stacked icon="circle-fill" variant="dark"></b-icon>
             <b-icon
@@ -45,17 +49,11 @@
               variant="white"
             ></b-icon> </b-iconstack
         ></a>
-        <a class="social-icon" href="#!">
-          <b-iconstack font-scale="3">
-            <b-icon stacked icon="circle-fill" variant="dark"></b-icon>
-            <b-icon
-              stacked
-              icon="instagram"
-              scale="0.5"
-              variant="white"
-            ></b-icon> </b-iconstack
-        ></a>
-        <a class="social-icon" href="#!">
+        <a
+          class="social-icon"
+          href="https://www.instagram.com/mst.wj/"
+          target="_blank"
+        >
           <b-iconstack font-scale="3">
             <b-icon stacked icon="circle-fill" variant="dark"></b-icon>
             <b-icon
@@ -65,7 +63,21 @@
               variant="white"
             ></b-icon> </b-iconstack
         ></a>
-        <a class="social-icon" href="#!">
+        <a
+          class="social-icon"
+          href="https://www.instagram.com/ye.ssan/"
+          target="_blank"
+        >
+          <b-iconstack font-scale="3">
+            <b-icon stacked icon="circle-fill" variant="dark"></b-icon>
+            <b-icon
+              stacked
+              icon="instagram"
+              scale="0.5"
+              variant="white"
+            ></b-icon> </b-iconstack
+        ></a>
+        <a class="social-icon" href="https://www.ssafy.com/" target="_blank">
           <b-iconstack font-scale="3">
             <b-icon stacked icon="circle-fill" variant="dark"></b-icon>
             <b-icon
