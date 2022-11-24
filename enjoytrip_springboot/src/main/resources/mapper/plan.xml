@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.enjoytrip.plan.dao.PlanDao">
+	<resultMap type="planDto" id="plan">
+		<result column="plan_id" property="planId"/>
+		<result column="title" property="title"/>
+		<result column="content" property="content"/>
+		<result column="user_id" property="userId"/>
+		<result column="plan_time" property="planTime"/>
+	</resultMap>
+	
+	<resultMap type="planDetailDto" id="planDetail">
+		<result column="plan_id" property="planId"/>
+		<result column="plan_order" property="planOrder"/>
+		<result column="contentid" property="contentId"/>
+	</resultMap>
+	
+	<!-- 마지막 글 번호 -->
+	<select id="findLastPlanId" parameterType="string" resultType="int">
+		select plan_id
+		from plan
+		where user_id = #{userId}
+		order by plan_time desc
+		limit 1;
+	</select>
+	
+	<!-- 여행계획 작성 -->
+	<insert id="writePlan" parameterType="planDto">
+		insert into plan (title, content, user_id, plan_time)
+		values (#{title}, #{content}, #{userId}, now())
+	</insert>
+	
+	<!-- 여행계획 경로 작성 -->
+	<insert id="writePlanDetail" parameterType="planDetailDto">
+		insert into plandetail (plan_id, plan_order, contentid)
+		values (#{planId}, #{planOrder}, #{contentId})
+	</insert>
+
+	<!-- 여행계획 목록 -->
+	<select id="getPlanList" resultMap="plan">
+		select plan_id, title, content, user_id, plan_time
+		from plan
+	</select>
+	
+	<!-- 회원 여행계획 목록 -->
+	<select id="findPlanList" parameterType="string" resultMap="plan">
+		select plan_id, title, content, user_id, plan_time
+		from plan
+		where user_id = #{userId}
+	</select>
+	
+	<!-- 여행계획 경로 목록 -->
+	<select id="getPlanDetailList" parameterType="int" resultMap="planDetail">
+		select plan_id, plan_order, contentid
+		from plandetail
+		where plan_id = #{planId}
+		order by plan_order
+	</select>
+</mapper>

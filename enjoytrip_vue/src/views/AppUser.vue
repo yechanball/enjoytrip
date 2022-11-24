@@ -10,4 +10,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.main {
+  padding-top: 8vh;
+}
+</style>

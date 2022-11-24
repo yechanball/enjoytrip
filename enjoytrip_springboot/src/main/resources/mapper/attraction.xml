@@ -57,12 +57,32 @@
 	
 	<!-- 관광지 목록 호출 -->
 	<select id="getAttractionList" parameterType="map" resultMap="attraction">
-		select areacode, contentid, contenttypeid, firstimage, mapx, mapy, sigungucode, title
+		select areacode, contentid, contenttypeid, firstimage, firstimage2, mapx, mapy, sigungucode, title
 		from attraction
-		where areacode = #{doIdx} and sigungucode = #{sigunguIdx}
+		where not mapx = 0 and not mapy = 0 and areacode = #{doIdx} and sigungucode = #{sigunguIdx}
 		<if test="contentTypeId != 0">
 			and contenttypeid = #{contentTypeId}
 		</if>
+	</select>
+	
+	<!-- 관광지 목록 검색 -->
+	<select id="searchAttractionList" parameterType="map" resultMap="attraction">
+		select areacode, contentid, contenttypeid, firstimage, firstimage2, mapx, mapy, sigungucode, title
+		from attraction
+		where not mapx = 0 and not mapy = 0 and not firstimage = '' and not firstimage2 = ''
+		<if test='!word.equals("null")'>
+			and title like concat('%', #{word}, '%')
+		</if>
+		<if test="doIdx != 0">
+			and areacode = #{doIdx}
+		</if>
+		<if test="sigunguIdx != 0">
+			and sigungucode = #{sigunguIdx}
+		</if>
+		<if test="contentTypeId != 0">
+			and contenttypeid = #{contentTypeId}
+		</if>
+		order by rand() limit 100
 	</select>
 	
 	<!-- 관광지 상세보기 호출 -->

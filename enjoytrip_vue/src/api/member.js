@@ -18,6 +18,10 @@ async function logout(userId, success, fail) {
   await api.get(`/user/logout/${userId}`).then(success).catch(fail);
 }
 
+async function findPass(user, success, fail) {
+  await api.put(`/user/findpass`, user).then(success).catch(fail);
+}
+
 async function checkId(userId, success, fail) {
   await api.get(`/user/idcheck/${userId}`).then(success).catch(fail);
 }
@@ -31,9 +35,14 @@ async function modify(user, success, fail) {
   await api.put(`/user/modify`, user).then(success).catch(fail);
 }
 
-async function deleteMember(user, success, fail) {
+async function passCheck(user, success, fail) {
   api.defaults.headers["refresh-token"] = sessionStorage.getItem("refresh-token");
-  await api.delete(`/user/delete`, user).then(success).catch(fail);
+  await api.post(`/user/passcheck`, user).then(success).catch(fail);
 }
 
-export { login, findById, tokenRegeneration, logout, checkId, join, modify, deleteMember };
+async function deleteMember(user, success, fail) {
+  api.defaults.headers["refresh-token"] = sessionStorage.getItem("refresh-token");
+  await api.post(`/user/delete`, user).then(success).catch(fail);
+}
+
+export { login, findById, tokenRegeneration, logout, findPass, checkId, join, modify, passCheck, deleteMember };

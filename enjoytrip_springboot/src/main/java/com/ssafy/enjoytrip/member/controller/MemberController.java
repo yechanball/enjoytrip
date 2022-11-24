@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.enjoytrip.attraction.controller.AttractionController;
 import com.ssafy.enjoytrip.member.model.MemberDto;
 import com.ssafy.enjoytrip.member.service.JwtServiceImpl;
 import com.ssafy.enjoytrip.member.service.MemberService;
@@ -35,10 +33,10 @@ import io.swagger.annotations.ApiParam;
 @RequestMapping("/user")
 @CrossOrigin("*")
 @Api("회원 컨트롤러 REST API")
-public class MemberRestController extends HttpServlet {
+public class MemberController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger logger = LoggerFactory.getLogger(AttractionController.class);
+	private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
 	private static final String SUCCESS = "success";
 	private static final String FAIL = "fail";
 	
@@ -48,7 +46,7 @@ public class MemberRestController extends HttpServlet {
 	private MemberService memberService;
 	
 	@Autowired
-	public MemberRestController(MemberService memberService) {
+	public MemberController(MemberService memberService) {
 		this.memberService = memberService;
 	}
 	
@@ -204,46 +202,60 @@ public class MemberRestController extends HttpServlet {
 	@PutMapping("/findpass")
 	public ResponseEntity<?> findpass(@RequestBody MemberDto memberDto) {
 		logger.debug("find password input info : {}", memberDto);
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;
 		try {
 			int cnt = memberService.findPassMember(memberDto);
 			if(cnt != 0) {
 				logger.debug("입력 받은 정보와 일치하는 계정 존재");
 				memberDto.setUserPwd("0000");
 				memberService.modifyMember(memberDto);
-				return new ResponseEntity<Void>(HttpStatus.OK);	
+				resultMap.put("message", SUCCESS);
+				status = HttpStatus.ACCEPTED;
 			}else {
 				logger.debug("입력 받은 정보와 일치하는 계정이 존재하지 않음");
-				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);	
+				resultMap.put("message", "NO_CONTENT");
+				status = HttpStatus.NO_CONTENT;	
 			}
 		} catch (Exception e) {
-			return exceptionHandling(e);
+			logger.error("비밀번호 찾기 실패 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 	
 	@ApiOperation(value = "아이디 비밀번호 정확성 검사", notes = "입력받은 userId와 userPwd가 실제 회원 정보와 일치하는지 확인해준다.")
 	@PostMapping("/passcheck")
 	public ResponseEntity<?> passCheck(@RequestBody Map<String, String> map) {
 		logger.debug("passCheck input info : {}", map);
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;
 		try {
 			MemberDto memberDto = memberService.userInfo(map.get("userId"));
 			if(memberDto != null && memberDto.getUserPwd().equals(map.get("userPwd"))) {
 				logger.debug("입력 받은 정보와 일치하는 계정 존재");
-				return new ResponseEntity<Void>(HttpStatus.OK);		
+				resultMap.put("message", SUCCESS);
+				status = HttpStatus.ACCEPTED;
 			}else {
 				logger.debug("입력 받은 정보와 일치하는 계정이 존재하지 않음");
-				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);								
+				resultMap.put("message", "NO_CONTENT");
+				status = HttpStatus.NO_CONTENT;							
 			}
 		} catch (Exception e) {
-			return exceptionHandling(e);
+			logger.error("비밀번호 확인 실패 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 	
 	@ApiOperation(value = "회원 탈퇴", notes = "DB에서 회원 삭제 여부를 변경시켜준다.")
-	@PutMapping("/delete")
+	@PostMapping("/delete")
 	public ResponseEntity<?> delete(@RequestBody MemberDto memberDto) {
+		logger.debug("delete memberDto info : {}", memberDto);
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = HttpStatus.ACCEPTED;
-		logger.debug("delete memberDto info : {}", memberDto);
 		try {
 			memberService.deleteMember(memberDto);
 			resultMap.put("message", SUCCESS);

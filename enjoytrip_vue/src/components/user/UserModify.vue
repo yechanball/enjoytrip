@@ -1,8 +1,17 @@
 <template>
-  <b-container class="mt-3" v-if="userInfo">
-    <b-row>
+  <b-container
+    class="mt-3"
+    v-if="userInfo"
+    data-aos="zoom-in"
+    data-aos-duration="200"
+  >
+    <b-row class="mb-4">
       <b-col>
-        <b-alert variant="secondary" show><h3>회원정보 수정</h3></b-alert>
+        <b-navbar toggleable="lg" type="dark" variant="dark">
+          <b-navbar-brand class="ms-3">
+            <h3>나의 정보</h3>
+          </b-navbar-brand>
+        </b-navbar>
       </b-col>
     </b-row>
     <b-form @submit="onSubmit" @reset="onReset">
@@ -82,9 +91,10 @@
           ></b-form-select>
         </div>
       </b-form-group>
-
-      <b-button type="submit" variant="primary">수정</b-button>
-      <b-button type="reset" variant="danger">취소</b-button>
+      <div class="col-auto text-center">
+        <b-button type="submit" variant="primary">수정</b-button>
+        <b-button type="reset" variant="danger">취소</b-button>
+      </div>
     </b-form>
   </b-container>
 </template>

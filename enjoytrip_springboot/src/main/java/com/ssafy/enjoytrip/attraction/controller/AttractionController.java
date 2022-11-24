@@ -96,6 +96,32 @@ public class AttractionController {
 			return exceptionHandling(e);
 		}
 	}
+	
+	@ApiOperation(value = "관광지 검색 목록", notes = "doIdx, sigunguIdx, contentTypeId, word에 해당하는 관광지 목록을 100개까지 반환해 줍니다.")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "doidx", value = "도 번호", required = true, dataType = "Intger", paramType = "path"),
+		@ApiImplicitParam(name = "sigunguidx", value = "시군구 번호", required = true, dataType = "Intger", paramType = "path"),
+		@ApiImplicitParam(name = "contenttypeid", value = "분류 번호", required = true, dataType = "Intger", paramType = "path"),
+		@ApiImplicitParam(name = "word", value = "검색어", required = true, dataType = "String", paramType = "path")
+		})
+	@GetMapping("/search/{doidx}/{sigunguidx}/{contenttypeid}/{word}")
+	public ResponseEntity<?> searchAttractionList(@PathVariable("doidx") int doIdx, @PathVariable("sigunguidx") int sigunguIdx, @PathVariable("contenttypeid") int contentTypeId, @PathVariable("word") String word) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("doIdx", doIdx);
+		map.put("sigunguIdx", sigunguIdx);
+		map.put("contentTypeId", contentTypeId);
+		map.put("word", word);
+		logger.debug("searchAttractionList 호출 -> map : {}", map);
+		try {
+			List<AttractionDto> list = attractionService.searchAttractionList(map);
+			if (list != null && !list.isEmpty()) {
+				return new ResponseEntity<List<AttractionDto>>(list, HttpStatus.OK);
+			} else
+				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
 
 
 	@ApiOperation(value = "관광지 상세정보", notes = "contentId에 해당하는 관광지 상세정보를 반환해 줍니다.")

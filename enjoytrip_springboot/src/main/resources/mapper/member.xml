@@ -33,14 +33,14 @@
 	<select id="getRefreshToken" parameterType="string" resultType="string">
 		select token
 		from members
-		where user_id = #{userId}
+		where user_id = #{userId} and user_isdel = 0
 	</select>
 	
 	<!-- 리프레쉬 토큰 저장 -->
 	<update id="saveRefreshToken" parameterType="map">
 		update members
 		set token = #{token}
-		where user_id = #{userId}
+		where user_id = #{userId} and user_isdel = 0
 	</update>
 	
 	<!-- 리프레쉬 토큰 삭제 -->

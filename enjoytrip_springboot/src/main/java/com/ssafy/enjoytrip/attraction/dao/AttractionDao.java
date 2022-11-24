@@ -15,5 +15,6 @@ public interface AttractionDao {
 	List<DoDto> getDoList() throws SQLException;
 	List<SigunguDto> getSigunguList(int sigunguDoIdx) throws SQLException;
 	List<AttractionDto> getAttractionList(Map<String, Integer> map) throws SQLException;
+	List<AttractionDto> searchAttractionList(Map<String, Object> map) throws SQLException;
 	AttractionDto getAttraction(int contentId) throws SQLException;
 }

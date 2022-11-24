@@ -35,6 +35,11 @@ public class AttractionServiceImpl implements AttractionService {
 	public List<AttractionDto> getAttractionList(Map<String, Integer> map) throws Exception {
 		return attractionDao.getAttractionList(map);
 	}
+	
+	@Override
+	public List<AttractionDto> searchAttractionList(Map<String, Object> map) throws Exception {
+		return attractionDao.searchAttractionList(map);
+	}
 
 	@Override
 	public AttractionDto getAttraction(int contentId) throws Exception {

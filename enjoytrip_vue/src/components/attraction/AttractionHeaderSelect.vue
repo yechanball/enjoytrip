@@ -86,11 +86,10 @@ export default {
   height: calc(10% - 20px);
   min-height: 80px;
   padding-top: 20px;
+  background-color: #414a53b2;
 }
 
 #attraction-header-select {
-  /* TODO: 배경색 수정하기 */
-  /* background-color: rgb(158, 124, 188); */
   margin: auto;
 }
 </style>

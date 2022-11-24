@@ -1,8 +1,12 @@
 <template>
-  <b-container class="mt-3">
-    <b-row>
+  <b-container class="mt-3" data-aos="zoom-in" data-aos-duration="200">
+    <b-row class="mb-4">
       <b-col>
-        <b-alert variant="secondary" show><h3>회원가입</h3></b-alert>
+        <b-navbar toggleable="lg" type="dark" variant="dark">
+          <b-navbar-brand class="ms-3">
+            <h3>회원가입</h3>
+          </b-navbar-brand>
+        </b-navbar>
       </b-col>
     </b-row>
     <b-form @submit="onSubmit" @reset="onReset">
@@ -89,9 +93,10 @@
           ></b-form-select>
         </div>
       </b-form-group>
-
-      <b-button type="submit" variant="primary">회원가입</b-button>
-      <b-button type="reset" variant="danger">초기화</b-button>
+      <div class="col-auto text-center">
+        <b-button type="submit" variant="primary">회원가입</b-button>
+        <b-button type="reset" variant="danger">초기화</b-button>
+      </div>
     </b-form>
   </b-container>
 </template>
@@ -189,11 +194,9 @@ export default {
         emailId: this.emailId,
         emailDomain: this.emailDomain,
       };
-      console.log("입력 받은 유저 정보: " + user);
       join(
         user,
         ({ data }) => {
-          console.log("회원가입 결과 : " + data);
           if (data.message === "success") {
             this.$router.push({ name: "login" });
           }
@@ -211,7 +214,6 @@ export default {
         this.idCheckMsg = "아이디는 5자 이상 16자 이하 입니다.";
         this.idCheckBool = false;
       } else {
-        console.log(userId);
         checkId(userId, ({ data }) => {
           if (data == 0) {
             this.idCheckMsg = userId + "는 사용할 수 있습니다.";

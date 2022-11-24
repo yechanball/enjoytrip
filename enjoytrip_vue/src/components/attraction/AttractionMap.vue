@@ -32,7 +32,7 @@ export default {
     ]),
   },
   watch: {
-    // 마커 위치 변동에 따른 지도 마커 표시
+    // 마커 위치 변화에 따른 지도 마커 표시
     markerPositions: function (markerPositions) {
       if (this.markers.length > 0) {
         this.markers.forEach((marker) => marker.setMap(null));
@@ -179,7 +179,7 @@ export default {
 
 <style>
 #attraction-map {
-  height: calc(90% - 20px);
+  height: 90%;
   /* TODO: 배경색 수정하기 */
   /* background-color: rgb(167, 235, 199); */
 }

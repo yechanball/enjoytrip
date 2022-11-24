@@ -37,7 +37,7 @@ import io.swagger.annotations.ApiOperation;
 public class BoardController {
 
 	private static final Logger logger = LoggerFactory.getLogger(BoardController.class);
-
+	private static final String SUCCESS = "success";
 	private BoardService boardService;
 
 	@Autowired
@@ -107,12 +107,17 @@ public class BoardController {
 	@Transactional
 	public ResponseEntity<?> write(@RequestBody BoardDto boardDto) {
 		logger.debug("board write info : {}", boardDto);
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.UNAUTHORIZED;
 		try {
 			boardService.writeArticle(boardDto);
-			return new ResponseEntity<Void>(HttpStatus.OK);
+			resultMap.put("message", SUCCESS);
+			status = HttpStatus.ACCEPTED;
 		} catch (Exception e) {
-			return exceptionHandling(e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 	
 	@ApiOperation(value = "게시판 글 보기", notes = "게시판의 글을 보여줍니다.")
@@ -139,12 +144,17 @@ public class BoardController {
 	public ResponseEntity<?> modify(@PathVariable("articleno") int articleNo, @RequestBody BoardDto boardDto) {
 		boardDto.setArticleNo(articleNo);
 		logger.debug("modify article info : {}", boardDto);
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.UNAUTHORIZED;
 		try {
 			boardService.modifyArticle(boardDto);
-			return new ResponseEntity<Void>(HttpStatus.OK);
+			resultMap.put("message", SUCCESS);
+			status = HttpStatus.ACCEPTED;
 		} catch (Exception e) {
-			return exceptionHandling(e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 	
 	@ApiOperation(value = "게시판 글 삭제", notes = "게시판의 글을 삭제합니다.")
@@ -152,14 +162,20 @@ public class BoardController {
 	@Transactional
 	public ResponseEntity<?> delete(@PathVariable("articleno") int articleNo) {
 		logger.debug("delete article_no : {}", articleNo);
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.UNAUTHORIZED;
 		try {
 			boardService.deleteAllMemo(articleNo);
 			boardService.deleteArticle(articleNo);
-			return new ResponseEntity<Void>(HttpStatus.OK);
+			resultMap.put("message", SUCCESS);
+			status = HttpStatus.ACCEPTED;
 		} catch (Exception e) {
-			return exceptionHandling(e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
+	
 	
 	private ResponseEntity<String> exceptionHandling(Exception e) {
 		e.printStackTrace();

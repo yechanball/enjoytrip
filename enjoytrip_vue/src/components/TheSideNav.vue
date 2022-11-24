@@ -2,28 +2,25 @@
   <div>
     <div id="sidebar">
       <div class="sidebar-body">
-        <div class="sidebar-profile" v-show="memberActive">
-          <img
-            :src="require('@/assets/img/logo_black.png')"
-            :alt="logoInfo.photo.title"
-          />
-          <div v-show="menuCompact.hidden" id="profile-name">
-            {{ logoInfo.name }}
+        <router-link :to="{ name: 'home' }" style="text-decoration: none">
+          <div class="sidebar-profile" v-show="memberActive">
+            <img :src="require('@/assets/img/logo_trip.png')" alt="logo" />
+            <div v-show="menuCompact.hidden" id="profile-name">
+              <h1>여행가자</h1>
+            </div>
           </div>
-        </div>
+        </router-link>
         <div class="sidebar-links sidebar-user">
           <div class="links">
             <!-- after login -->
             <div v-if="userInfo">
               <div class="user-info">
                 <b-avatar
-                  variant="primary"
+                  variant="danger m-auto"
                   v-text="userInfo.userId.charAt(0).toUpperCase()"
                 ></b-avatar>
                 <div class="link-title" v-show="menuCompact.hidden">
-                  {{ userInfo.userName }}({{
-                    userInfo.userId
-                  }})님<br />환영합니다.
+                  {{ userInfo.userName }}님<br />환영합니다.
                 </div>
               </div>
               <router-link :to="{ name: 'mypage' }">
@@ -65,7 +62,21 @@
           "
         ></div>
         <div class="sidebar-links">
-          <div class="links">
+          <!-- after login -->
+          <div class="links" v-if="userInfo">
+            <router-link
+              :to="link.path"
+              v-for="link in menuLinksLogin"
+              :key="link.title"
+            >
+              <b-icon :icon="link.icon"></b-icon>
+              <div class="link-title" v-show="menuCompact.hidden">
+                {{ link.title }}
+              </div>
+            </router-link>
+          </div>
+          <!-- before login -->
+          <div class="links" v-else>
             <router-link
               :to="link.path"
               v-for="link in menuLinks"
@@ -101,18 +112,18 @@ export default {
       menuCompact: {
         hidden: true,
       },
-      logoInfo: {
-        name: "EnjoyTrip",
-        photo: {
-          file: "logo_black.png",
-          title: "EnjoyTrip",
-        },
-      },
       memberActive: true,
       menuLinks: [
         { path: "/", title: "홈", icon: "house-fill" },
         { path: "/attraction", title: "관광지지도", icon: "map-fill" },
-        { path: "/travel", title: "여행코스", icon: "signpost-split" },
+        { path: "/travel", title: "여행코스 목록", icon: "signpost-split" },
+        { path: "/board", title: "공유게시판", icon: "card-text" },
+      ],
+      menuLinksLogin: [
+        { path: "/", title: "홈", icon: "house-fill" },
+        { path: "/attraction", title: "관광지지도", icon: "map-fill" },
+        { path: "/travel", title: "여행코스 목록", icon: "signpost-split" },
+        { path: "/plan", title: "여행코스 짜기", icon: "pin-map-fill" },
         { path: "/board", title: "공유게시판", icon: "card-text" },
       ],
     };
@@ -143,8 +154,10 @@ export default {
       this.menuCompact.hidden = !this.menuCompact.hidden;
 
       if (this.menuCompact.hidden) {
+        document.getElementById(".sidebar-links").style.minWidth = "0px";
         return (btnToggleIcon.style.transform = "rotateY(0deg)");
       } else {
+        document.getElementById(".sidebar-links").style.minWidth = "150px";
         return (btnToggleIcon.style.transform = "rotateY(180deg)");
       }
     },
@@ -159,17 +172,16 @@ export default {
 }
 
 #sidebar {
+  height: 100%;
   margin: 0;
   top: 0;
   left: 0;
-  background-color: rgba(40, 58, 90, 0.9);
-  /* background-color: rgb(159, 171, 191); */
-  height: 100%;
+  background-color: #bd5d38;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  text-align: center;
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.6);
-  user-select: none;
 }
 
 .sidebar-body {
@@ -183,7 +195,7 @@ export default {
   justify-content: left;
   align-items: center;
   padding: 20px;
-  background-color: rgba(255, 255, 255, 0.75);
+  background-color: rgba(255, 255, 255, 0.25);
   transition: 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   margin-bottom: 10px;
   cursor: pointer;
@@ -193,18 +205,25 @@ export default {
   cursor: pointer;
 }
 
-.sidebar-profile #profile-name {
-  font-weight: 900;
+#profile-name {
+  min-width: 150px;
+  align-self: center;
+}
+
+#profile-name > h1 {
+  font-family: "TTCrownMychewR";
+  font-weight: 600;
   flex-grow: 1;
-  font-size: 20px;
   text-align: center;
-  color: rgb(36, 44, 58);
+  color: rgb(0, 0, 0, 0.8);
+  margin: 0;
+  padding-left: 5px;
 }
 
 .sidebar-profile img {
   max-width: 60px;
   border-radius: 100%;
-  border: 4px inset rgba(255, 255, 255, 0.25);
+  /* border: 4px inset rgba(255, 255, 255, 0.25); */
 }
 
 .sidebar-links {
@@ -237,9 +256,9 @@ export default {
 
 .sidebar-links a:hover {
   transform: scale(1.08);
-  background-color: rgba(86, 112, 156, 0.9);
-  box-shadow: 0px 0px 8px rgba(86, 112, 156, 0.5);
-  border-color: rgba(101, 129, 177, 0.9);
+  background-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0px 0px 8px rgba(255, 255, 255, 0.5);
+  border-color: rgba(255, 255, 255, 0.8);
 }
 
 /* .sidebar-links a:nth-last-of-type(1):hover {
@@ -278,7 +297,7 @@ export default {
 .user-info {
   display: flex;
   flex-direction: row;
-  background-color: oldlace;
+  background-color: rgba(255, 255, 255, 0.75);
   padding-inline: 15px;
   padding-block: 10px;
   font-weight: 900;
@@ -297,7 +316,7 @@ export default {
 }
 
 #btn-toggle {
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: rgba(255, 255, 255, 0.3);
   transition: 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   padding: 5px;
   cursor: pointer;
@@ -306,8 +325,8 @@ export default {
 }
 
 #btn-toggle:hover {
-  background-color: rgb(54, 43, 154);
-  box-shadow: 0px 0px 6px rgb(54, 43, 154);
+  background-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0px 0px 6px rgba(255, 255, 255, 0.4);
 }
 
 .app-bar-content {

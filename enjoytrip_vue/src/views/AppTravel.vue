@@ -1,14 +1,39 @@
 <template>
-  <div class="main">
-    <h2>여행 코스 화면입니다.</h2>
-    <p>관광지 목록/선택/코스 생성 | 여행코스 목록/열람</p>
+  <div class="main row" data-aos="fade-up" data-aos-duration="200">
+    <div class="col-7">
+      <travel-map></travel-map>
+    </div>
+    <div class="col-5">
+      <router-view></router-view>
+      <!-- <travel-list></travel-list> -->
+    </div>
   </div>
 </template>
 
 <script>
+import TravelMap from "@/components/travel/TravelMap";
+
 export default {
   name: "AppTravel",
+  components: {
+    TravelMap,
+    // TravelList,
+  },
+  data() {
+    return {};
+  },
+  computed: {},
+  mounted() {},
+  methods: {},
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.main {
+  height: 100vh;
+  margin: 0;
+}
+h2 {
+  text-align: center;
+}
+</style>

@@ -17,7 +17,7 @@
 	</resultMap>
 	
 	<!-- 게시판 글 목록 불러오기 -->
-	<select id="listArticle" parameterType="map" resultMap="article">
+	<!-- <select id="listArticle" parameterType="map" resultMap="article">
 		select article_no, user_id, subject, content, hit, register_time
 		from board
 		<if test='!key.equals("none")'>
@@ -30,6 +30,10 @@
 			order by ${orderBy} ${orderByDir}
 		</if>
 		limit #{start}, #{spl}
+	</select>-->
+	<select id="listArticle" parameterType="map" resultMap="article">
+		select article_no, user_id, subject, content, hit, register_time
+		from board
 	</select>
 	
 	<!-- 총 글 개수 불러오기 -->

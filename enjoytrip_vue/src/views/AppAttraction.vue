@@ -1,5 +1,5 @@
 <template>
-  <div class="main">
+  <div class="main" data-aos="fade-up" data-aos-duration="200">
     <attraction-header-select></attraction-header-select>
     <attraction-map></attraction-map>
   </div>

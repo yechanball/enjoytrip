@@ -39,28 +39,64 @@ const routes = [
     component: AppAttraction,
   },
   {
+    path: "/plan",
+    name: "plan",
+    beforeEnter: onlyAuthUser,
+    component: () => import("@/views/AppPlan"),
+  },
+  {
     path: "/travel",
     name: "travel",
     component: () => import("@/views/AppTravel"),
-    // children: [
-    //   {
-    //     path: "경로이름",
-    //     name: "이름",
-    //     //component: () => import("@/components/컴포넌트이름"),
-    //   },
-    // ],
+    redirect: "/travel/list",
+    children: [
+      {
+        path: "list",
+        name: "travellist",
+        component: () => import("@/components/travel/TravelList"),
+      },
+      {
+        path: "view",
+        name: "travelview",
+        component: () => import("@/components/travel/TravelView"),
+      },
+    ],
   },
   {
     path: "/board",
     name: "board",
     component: () => import("@/views/AppBoard"),
-    // children: [
-    //   {
-    //     path: "경로이름",
-    //     name: "이름",
-    //     //component: () => import("@/components/컴포넌트이름"),
-    //   },
-    // ],
+    redirect: "/board/list",
+    children: [
+      {
+        path: "list",
+        name: "boardList",
+        component: () => import("@/components/board/BoardList"),
+      },
+      {
+        path: "write",
+        name: "boardwrite",
+        beforeEnter: onlyAuthUser,
+        component: () => import("@/components/board/BoardWrite"),
+      },
+      {
+        path: "detail/:articleno",
+        name: "boardDetail",
+        component: () => import("@/components/board/BoardDetail"),
+      },
+      {
+        path: "modify/:articleno",
+        name: "boardModify",
+        beforeEnter: onlyAuthUser,
+        component: () => import("@/components/board/BoardModify"),
+      },
+      {
+        path: "delete/:articleno",
+        name: "boardDelete",
+        beforeEnter: onlyAuthUser,
+        component: () => import("@/components/board/BoardDelete"),
+      },
+    ],
   },
   {
     path: "/user",
@@ -76,6 +112,11 @@ const routes = [
         path: "login",
         name: "login",
         component: () => import("@/components/user/UserLogin"),
+      },
+      {
+        path: "find",
+        name: "find",
+        component: () => import("@/components/user/UserFind"),
       },
       {
         path: "mypage",
